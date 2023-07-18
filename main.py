@@ -21,10 +21,13 @@ class Maze():
 
     def prepare_image(self,img):
 
+        #--------------------------
         # Make image array      (1)
         # Invert boolean values (2)
         # Delete bottom row     (3)
         # Delete end column     (4)
+        #--------------------------
+
 # IMPROVE   - make additional strip on all four edges of all false, so when [-1] doesnt fail in the event the start and target are on the sale row*col or col*row
         img_arr = np.array(img)         # (1)
         img_inv = np.invert(img_arr)    # (2)
@@ -46,6 +49,10 @@ class Maze():
                 self.entrance = (0,cor)
             if col_exit[i]:
                 self.exit     = (30,cor)
+
+    def print_nodes(self):
+        for i in range(0,len(self.nodes)):
+            print("ID:", self.nodes[i].ID,"  \t(X,Y):",self.nodes[i].position,"  \tTYPE:",self.nodes[i].type)
 
     def set_nodes(self):
         def traversable():
@@ -73,18 +80,8 @@ class Maze():
             # Identify nodes of interest, to prevent searching every pixel
             for i in range(len(trav)-1):
 
-                # print(trav)
-                # print(trav[38])
                 row = trav[i][0]    # (x-coordinate)
                 col = trav[i][1]    # (y-coordinate)
-                # row = 9
-                # col = 15
-                # print(row,col)
-    # print(maze.array[row,col])
-
-                # inspect UP
-                # if(maze.array[row-1,col]):
-                #     print("out of bounds")
 
                 Lrow = row
                 Lcol = col-1
@@ -110,54 +107,65 @@ class Maze():
                 neighbours.append(D)
 
                 set_size = cardinality(neighbours)
-                # print(set_size)
-
-                # i = 1
 
                 if(set_size < 3):
-                    # AGGREGATE into one conditional wich labels TYPE as COR
-                    # identify a corner
+#CORNERS
                     if((maze.array[row,col]) and (not maze.array[Lrow,Lcol]) and (not maze.array[Urow,Ucol])):
+                    # LD-CORNER
                         node = Node(row,col)
                         node.type = "COR"
                         node.ID = i
                         nodes.append(node)
-                        # print("Left-Down Corner: ",node.position)
                     if((maze.array[row,col]) and (not maze.array[Rrow,Rcol]) and (not maze.array[Urow,Ucol])):
+                    # RD-CORNER
                         node = Node(row,col)
                         node.type = "COR"
                         node.ID = i
                         nodes.append(node)
-                        # print("Right-Down Corner: ",node.position)
-                    if((maze.array[row,col]) and (not maze.array[Lrow,Lcol]) and (not maze.array[Drow,Dcol])):
+                    if((maze.array[row,col]) and (not maze.array[Lrow,Lcol]) and (not maze.array[Drow,Dcol])): 
+                    # LU-CORNER
                         node = Node(row,col)
                         node.type = "COR"
                         node.ID = i
                         nodes.append(node)
-                        # print("Left-Up Corner: ",node.position)
                     if((maze.array[row,col]) and (not maze.array[Rrow,Rcol]) and (not maze.array[Drow,Dcol])):
+                    # RD-CORNER
                         node = Node(row,col)
                         node.type = "COR"
                         node.ID = i
                         nodes.append(node)
-                        # print("Right-Up Corner: ",node.position)
-                    
-                    # node.ID = i
-                    # nodes.append(node)
-
+#DEAD-END
                 if(set_size == 3):
-                    # identify a Dead-End
                     if((maze.array[row,col]) and (not maze.array[row,col-1]) and (not maze.array[row,col+1]) and (not maze.array[row-1,col])):
                         node = Node(row,col)
                         node.type = "DE"
-                        # print("Dead-End Up: ",node.position)                    
+                        node.ID = i
+                        nodes.append(node)
+                if(set_size == 1):
+#JUNCTIONS
+                    if( (not maze.array[Urow,Ucol]) and (maze.array[Lrow,Lcol]) and (maze.array[Rrow,Rcol]) and (maze.array[Drow,Dcol]) ):
+                        node = Node(row,col)
+                        node.type = "JUNC" # T-Junction
+                        node.ID = i
+                        nodes.append(node)
+                    
+                    if( (not maze.array[Drow,Dcol]) and (maze.array[Lrow,Lcol]) and (maze.array[Rrow,Rcol]) and (maze.array[Urow,Ucol]) ):
+                        node = Node(row,col)
+                        node.type = "JUNC" # 180DEG-T-Junction
                         node.ID = i
                         nodes.append(node)
 
-
-                # CREATE conditional for T junction
-            
-            # print(nodes[i].position)
+                    if( (not maze.array[Rrow,Rcol]) and (maze.array[Lrow,Lcol]) and (maze.array[Urow,Ucol]) and (maze.array[Drow,Dcol]) ):
+                        node = Node(row,col)
+                        node.type = "JUNC" # 90DEG-T-Junction
+                        node.ID = i
+                        nodes.append(node)
+                    
+                    if( (not maze.array[Lrow,Lcol]) and (maze.array[Rrow,Rcol]) and (maze.array[Urow,Ucol]) and (maze.array[Drow,Dcol]) ):
+                        node = Node(row,col)
+                        node.type = "JUNC" # -90DEG-T-Junction
+                        node.ID = i
+                        nodes.append(node)
             return nodes
 
         # cycle through each pixel in each row, identify points of interest, put them in que from order 
@@ -165,30 +173,10 @@ class Maze():
         nodes=[]
         nodes = inspect_cor(trav)
 
-        for i in range(0,len(nodes)):
-            print("ID:", nodes[i].ID,"  \t(X,Y):",nodes[i].position,"  \tTYPE:",nodes[i].type)
-        
-        # print(trav)
-        # for i in range(0,5):
-        #     inspect_cor(cue[i])
-        # for i in range(len(cue)):
-        
-        #     # if coordinate of interest
-        #     if(inspect_cor(cue[i])):
-        #         print(cue[i])
-                # make into a node and store
-                # node = Node(cue[i])
-                # node.edge
-                # cue.append(Node(cue[i]))
-            
-                    
-                    # "ID $'f" = Node()
-                    # print(vis)      # IMPORTANT - all of these are traversable coordinates
-                        # Visit each coordinate in sequence
-                            # For each cor that has a TYPE make it a node
-                                # Place into a preliminary cue awaiting ordering
+        maze.nodes = nodes
 
-                    # NEXT -> need to visit each coordinate and give state/type
+        # for i in range(0,len(nodes)):
+        #     print("ID:", nodes[i].ID,"  \t(X,Y):",nodes[i].position,"  \tTYPE:",nodes[i].type)
 
 if os.path.exists(sys.argv[1]):
     path = os.path.basename(sys.argv[1])
@@ -202,6 +190,8 @@ maze.prepare_image(img)  # MAKE img boolean, invert, delete edges
 maze.find_vector_space() # Generates Tuple-Pair for range of coordinate space
 maze.find_cor_enter_exit()
 maze.set_nodes()
+maze.print_nodes()
+
 # print(maze.exit)
 # print(maze.span[0])
 # print(maze.array[-1])
