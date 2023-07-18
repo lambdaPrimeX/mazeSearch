@@ -161,5 +161,10 @@ class Maze():
         trav = traversable()
         nodes=[]
         nodes = inspect_cor(trav)
-
         self.nodes = nodes
+
+    def order_nodes_by_proximity(self):
+        print("ermm")
+
+    def create_edges():
+        print("errrr what")
