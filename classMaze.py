@@ -1,5 +1,6 @@
 import numpy as np
 from classNode import Node
+from classMarker import Marker
 
 class Maze():
     def __init__(self,img):
@@ -33,15 +34,31 @@ class Maze():
         col_exit  = self.array[-1]
 
         for i in range(0,len(col_enter)):
-            cor = i         # +1 convert to coordinate
+            cor = i
             if col_enter[i]:
-                self.entrance = (0,cor)
+                self.entrance   = (0,cor)
             if col_exit[i]:
-                self.exit     = (30,cor)
+                self.goal_state = (30,cor)
 
     def print_nodes(self):
         for i in range(0,len(self.nodes)):
             print("ID:", self.nodes[i].ID,"  \t(X,Y):",self.nodes[i].position,"  \tTYPE:",self.nodes[i].type)
+
+    def direction(self,row,col):
+
+        Lrow = row
+        Lcol = col-1
+
+        Rrow = row
+        Rcol = col+1
+        
+        Urow = row-1
+        Ucol = col
+        
+        Drow = row+1
+        Dcol = col
+
+        return (Lrow,Lcol),(Rrow,Rcol),(Urow,Ucol),(Drow,Dcol)
 
     def set_nodes(self):
         def traversable():
@@ -72,6 +89,9 @@ class Maze():
                 row = trav[i][0]    # (x-coordinate)
                 col = trav[i][1]    # (y-coordinate)
 
+                # Lrow,Lcol,Rrow,Rcol,Urow,Ucol,Drow,Dcol = self.direction(row,col)
+                # L,R,U,D = self.direction(row,col)
+
                 Lrow = row
                 Lcol = col-1
                 
@@ -88,6 +108,8 @@ class Maze():
                 R = self.array[Rrow,Rcol]
                 U = self.array[Urow,Ucol]
                 D = self.array[Drow,Dcol]
+
+                # print("TEST: ", L)
 
                 neighbours = []
                 neighbours.append(L)
@@ -163,8 +185,54 @@ class Maze():
         nodes = inspect_cor(trav)
         self.nodes = nodes
 
-    def order_nodes_by_proximity(self):
-        print("ermm")
+    def create_edges(self):
+        self.nodes[1].edge = [[1,2]]    #(u,v) (weight,connected vertex)
+        # give each edge property [ [L,(u,v)] , [R,(u,v)], [U,(u,v)], [D,(u,v)] ]
 
-    def create_edges():
-        print("errrr what")
+# need to creat action, stepping left, right up or down. Think of way to organise and associate clear 
+
+    # def move(self):
+    #         # row = trav[i][0]    # (y-coordinate) | (y,x)
+    #         # col = trav[i][1]    # (x-coordinate) | (y,x)
+
+    #         row = self.location[0][0]
+    #         col = self.location[1][0]
+
+    #         Lrow,Lcol,Rrow,Rcol,Urow,Ucol,Drow,Dcol = self.direction(row,col)
+
+    #         Dcol = col
+    #         self.location = (Urow,Ucol)
+    
+    def initialise_path(self):
+        self.marker = Marker()
+        self.marker.current = self.entrance # [(row,col),[("L",False),("R",False)...]
+        self.find_possible_moves()
+
+    def find_possible_moves(self):
+        # ROW = X[0], COL = X[1]
+        L,R,U,D = self.direction(0,12) 
+        # ,Lrow = L[1]
+        # Rrow,Rcol
+        # Urow,Ucol
+        # Drow,Dcol
+        self.marker.L.cor = L
+        self.marker.R.cor = R
+        self.marker.U.cor = U
+        self.marker.D.cor = D
+        
+        self.marker.L.truth = self.array[L]
+        self.marker.R.truth = self.array[R]
+        self.marker.U.truth = self.array[U]
+        self.marker.D.truth = self.array[D]
+
+        print("\nL:",self.marker.L.cor,self.marker.L.truth,"\tR:",self.marker.R.cor,self.marker.R.truth,"\tU:",self.marker.U.cor,self.marker.U.truth,"\tD:",self.marker.D.cor,self.marker.D.truth,"\n")
+        # loc.append(direction)
+        # print(loc)
+        # # lo
+        # return direction
+
+    def order_nodes_by_proximity(self):
+        # moves = self.find_possible_moves()
+        # self.move(direction)
+        # print("marker 2:",self.marker.L)
+        print("----------")
