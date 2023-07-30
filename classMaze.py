@@ -179,7 +179,7 @@ class Maze():
                         nodes.append(node)
             return nodes
 
-        # cycle through each pixel in each row, identify points of interest, put them in que from order 
+        # cycle through each pixel in each row, identify points of interest, put them in que from order
         trav = traversable()
         nodes=[]
         nodes = inspect_cor(trav)
@@ -210,8 +210,9 @@ class Maze():
 
     def find_possible_moves(self):
         # ROW = X[0], COL = X[1]
-        L,R,U,D = self.direction(0,12) 
-        # ,Lrow = L[1]
+        # current = self.marker.current
+        L,R,U,D = self.direction(self.marker.current[0],self.marker.current[1]) 
+        # ,Lrow = L[1]s
         # Rrow,Rcol
         # Urow,Ucol
         # Drow,Dcol
@@ -236,3 +237,31 @@ class Maze():
         # self.move(direction)
         # print("marker 2:",self.marker.L)
         print("----------")
+
+    # Function to determine next move,
+    # Evaluate all of the surrounding cells
+        # if True, explore until node is discorvered
+
+    # Function to search list nodes[i] if == then return as next in position
+
+    def move_to_valid_cell(self):
+        # print(self.marker.D.cor)
+        validPath = []
+        # check truth of each L,R,U,D, if true then 
+        if(self.marker.L.truth == True):
+            validPath.append(self.marker.L.cor)
+        if(self.marker.R.truth == True):
+            validPath.append(self.marker.R.cor)
+        if(self.marker.U.truth == True):
+            validPath.append(self.marker.U.cor)
+        if(self.marker.D.truth == True):
+            validPath.append(self.marker.D.cor)
+
+        self.marker.validPath = validPath
+
+    # def match_nodes_list(self,check):
+    #     nodes = self.nodes
+    #     for i in range(len(nodes)):
+    #         if check == nodes[i].position:
+    #             next.nodes[i]
+    #     return next

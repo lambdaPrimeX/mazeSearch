@@ -22,7 +22,11 @@ maze.prepare_image(img)         # MAKE img boolean, invert, delete edges
 maze.find_vector_space()        # Generates Tuple-Pair for range of coordinate space
 maze.find_cor_enter_exit()      # Finds start and target coordinates
 maze.set_nodes()                # Finds all nodes of interest under maze.nodes unordered
-# maze.print_nodes()              # Testing print function for all nodes of interest
 maze.create_edges()             # Gives edges and weight from start/entrance
 maze.initialise_path()
 maze.order_nodes_by_proximity() # Orders nodes by proximity to start
+# maze.print_nodes()              # Testing print function for all nodes of interest
+# maze.match_nodes_list(check = maze.nodes[0].position)
+maze.move_to_valid_cell()
+print(maze.marker.validPath)
+# print("ID:",maze.nodes[0].ID,"\tCOR:",maze.nodes[0].position)
