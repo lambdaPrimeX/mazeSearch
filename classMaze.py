@@ -244,24 +244,75 @@ class Maze():
 
     # Function to search list nodes[i] if == then return as next in position
 
-    def move_to_valid_cell(self):
-        # print(self.marker.D.cor)
+    # Function must check if surrounding cells are valid
+    # IF 'True' -> add to validPath
+        # Take the nextCell and compare:
+            # Against all items in self.nodes[i].cor
+                # IF 'True' break loop
+                # Else continue
+
+    def create_valid_path_to_node(self):
+
+        def match_nodes_list(self,check):
+            nodes = self.nodes
+            for i in range(len(nodes)):
+                if check == nodes[i].position:
+                    return True
+                else:
+                    return False
+                
+        def pop_tuple(self,tuple):
+            row = tuple[0]
+            col = tuple[1]
+            return row,col
+                    
         validPath = []
-        # check truth of each L,R,U,D, if true then 
-        if(self.marker.L.truth == True):
-            validPath.append(self.marker.L.cor)
-        if(self.marker.R.truth == True):
-            validPath.append(self.marker.R.cor)
-        if(self.marker.U.truth == True):
-            validPath.append(self.marker.U.cor)
-        if(self.marker.D.truth == True):
-            validPath.append(self.marker.D.cor)
+        nextCell  = False
+
+# Use different approach, if the direction is True, +-1 in that direction until node is discovered
+            # check truth of each L,R,U,D, if true then 
+        self.spotter = self.marker.current
+        while(match_nodes_list(self,self.spotter) == False):
+
+            if(self.marker.L.truth == True):                    #shift left 
+                validPath.append(self.marker.U.cor)
+                self.spotter = self.marker.current
+                row,col = pop_tuple(self,self.marker.current)
+                row -= 1
+                self.spotter = (row,col)
+
+            if(self.marker.R.truth == True):                    #shift right
+                validPath.append(self.marker.R.cor)
+                self.spotter = self.marker.current
+                row,col = pop_tuple(self,self.marker.current)
+                col += 1
+                self.spotter = (row,col)
+            
+            if(self.marker.U.truth == True):                    #shift up
+                validPath.append(self.marker.U.cor)
+                self.spotter = self.marker.current
+                row,col = pop_tuple(self,self.marker.current)
+                row -= 1
+                self.spotter = (row,col)
+            
+            if(self.marker.D.truth == True):                    #shift down
+                validPath.append(self.marker.D.cor)
+                self.spotter = self.marker.current
+                row,col = pop_tuple(self,self.marker.current)
+                
+                while(not match_nodes_list(self,self.spotter)):
+                    row += i
+                    self.spotter = (row,col)
+
+        print(self.spotter)
+        # THEN add next node to ordered list
+        # THEN connect the edge
+        # THEN evaluate next marker
+
+
+
+
+
 
         self.marker.validPath = validPath
-
-    # def match_nodes_list(self,check):
-    #     nodes = self.nodes
-    #     for i in range(len(nodes)):
-    #         if check == nodes[i].position:
-    #             next.nodes[i]
-    #     return next
+            # break
