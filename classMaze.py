@@ -268,17 +268,26 @@ class Maze():
                     
         validPath = []
         nextCell  = False
+        i=0
 
 # Use different approach, if the direction is True, +-1 in that direction until node is discovered
             # check truth of each L,R,U,D, if true then 
         self.spotter = self.marker.current
-        while(match_nodes_list(self,self.spotter) == False):
+        row,col = pop_tuple(self,self.marker.current)
+        col -= 1
+        self.spotter = (1,1)
+
+        print("\n\nTEST: match_nodes_list():\t",match_nodes_list(self,self.spotter))
+
+        # Issue, not returning True when match found from existing nodes
+
+        while(match_nodes_list(self,self.spotter) != False):
 
             if(self.marker.L.truth == True):                    #shift left 
                 validPath.append(self.marker.U.cor)
                 self.spotter = self.marker.current
                 row,col = pop_tuple(self,self.marker.current)
-                row -= 1
+                col -= 1
                 self.spotter = (row,col)
 
             if(self.marker.R.truth == True):                    #shift right
@@ -303,6 +312,10 @@ class Maze():
                 while(not match_nodes_list(self,self.spotter)):
                     row += i
                     self.spotter = (row,col)
+                    i+=1
+            print("\n\n",i,"\n\n")
+
+            break        
 
         print(self.spotter)
         # THEN add next node to ordered list
